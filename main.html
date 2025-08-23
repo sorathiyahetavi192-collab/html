@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR for GitHub Dashboard</title>
+  <!-- QRCode.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <h2>QR Code: https://github.com/dashboard</h2>
+
+  <div id="qrcode"></div>
+  <br>
+  <button id="download">Download PNG</button>
+
+  <script>
+    const url = "https://github.com/dashboard";
+
+    // Render QR
+    const qrContainer = document.getElementById("qrcode");
+    const qr = new QRCode(qrContainer, {
+      text: url,
+      width: 256,
+      height: 256,
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Download button
+    document.getElementById("download").addEventListener("click", function () {
+      // qrcodejs renders a <canvas> or <img>; handle both
+      const canvas = qrContainer.querySelector("canvas");
+      const img = qrContainer.querySelector("img");
+      let dataURL;
+
+      if (canvas) {
+        dataURL = canvas.toDataURL("image/png");
+      } else if (img) {
+        // If it rendered as <img>, draw it to a canvas to export
+        const c = document.createElement("canvas");
+        c.width = img.width;
+        c.height = img.height;
+        const ctx = c.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        dataURL = c.toDataURL("image/png");
+      }
+
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "github-dashboard-qr.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+  </script>
+</body>
+</html>
